@@ -2,7 +2,6 @@ require('dotenv').config();
 
 // learn more about HTTP functions here: https://arc.codes/primitives/http
 exports.handler = async function http(req) {
-  console.log('env', process.env.REDIRECT);
   const url = `https://app.alpaca.markets/oauth/authorize?response_type=code&client_id=${process.env.CLIENTID}&redirect_uri=${process.env.REDIRECT}&state=1231231&scope=account:write%20trading`;
   return {
     statusCode: 200,

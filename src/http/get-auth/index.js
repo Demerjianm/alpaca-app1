@@ -1,7 +1,7 @@
 const qs = require('qs');
 const axios = require('axios');
 require('dotenv').config();
-// learn more about HTTP functions here: https://arc.codes/primitives/http
+
 exports.handler = async function http(req) {
   const { queryStringParameters } = req;
   const { code } = queryStringParameters;
@@ -21,21 +21,33 @@ exports.handler = async function http(req) {
     },
     data: data
   };
-  const url = `https://api.alpaca.markets/oauth/token`;
-  console.log({ url, code, queryStringParameters });
-  const res = await axios(config);
-  console.log({ res });
-  const { status } = res;
-  return {
-    statusCode: 200,
-    headers: {
-      'cache-control':
-        'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
-      'content-type': 'text/html; charset=utf8'
-    },
-    body:
-      status === 200
-        ? 'Congratulations you are authorized!'
-        : 'Sorry an error occured'
-  };
+
+  try {
+    const res = await axios(config);
+    console.log({ data: res.data });
+    const { status } = res;
+    return {
+      statusCode: 200,
+      headers: {
+        'cache-control':
+          'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
+        'content-type': 'text/html; charset=utf8'
+      },
+      body:
+        status === 200
+          ? `Congratulations you are authorized! Your key is: ${res.data.access_token}`
+          : 'Sorry an error occured'
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      statusCode: 200,
+      headers: {
+        'cache-control':
+          'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
+        'content-type': 'text/html; charset=utf8'
+      },
+      body: `<h1>Sorry an error occured</h1>`
+    };
+  }
 };

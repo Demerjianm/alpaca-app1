@@ -4,6 +4,7 @@ alpaca
 @http
 get /
 get /auth
+get /account
 
 # @aws
 # profile default
